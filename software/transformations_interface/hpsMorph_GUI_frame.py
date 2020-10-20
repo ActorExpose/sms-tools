@@ -7,6 +7,7 @@ try:
 except ImportError:
     # for Python3
     from tkinter import *  ## notice lowercase 't' in tkinter here
+
     from tkinter import filedialog as tkFileDialog
     from tkinter import messagebox as tkMessageBox
 import sys, os
@@ -255,8 +256,8 @@ class HpsMorph_frame:
 		self.stocf.insert(0, "0.1")
 
 		#BUTTON TO DO THE ANALYSIS OF THE SOUND
-		self.compute = Button(self.parent, text="Analysis", command=self.analysis, bg="dark red", fg="white")
-		self.compute.grid(row=10, column=0, padx=(210, 5), pady=(2,2), sticky=W)
+		# self.compute = Button(self.parent, text="Analysis", command=self.analysis, bg="dark red", fg="white")
+		# self.compute.grid(row=10, column=0, padx=(210, 5), pady=(2,2), sticky=W)
 
 		###
 		#SEPARATION LINE
@@ -358,6 +359,7 @@ class HpsMorph_frame:
 			tkMessageBox.showerror("Input values error", errorMessage)
 
 	def transformation_synthesis(self):
+		self.analysis()
 
 		try:
 			inputFile1 = self.inputFile1

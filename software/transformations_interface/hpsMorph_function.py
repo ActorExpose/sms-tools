@@ -46,60 +46,6 @@ def analysis(inputFile1='../../sounds/violin-B3.wav', window1='blackman', M1=100
 	# compute the harmonic plus stochastic models
 	hfreq1, hmag1, hphase1, stocEnv1 = HPS.hpsModelAnal(x1, fs1, w1, N1, H, t1, nH, minf01, maxf01, f0et1, harmDevSlope1, minSineDur1, Ns, stocf)
 	hfreq2, hmag2, hphase2, stocEnv2 = HPS.hpsModelAnal(x2, fs2, w2, N2, H, t2, nH, minf02, maxf02, f0et2, harmDevSlope2, minSineDur2, Ns, stocf)
-
-	# create figure to plot
-	plt.figure(figsize=(9, 6))
-
-	# frequency range to plot
-	maxplotfreq = 15000.0
-
-	# plot spectrogram stochastic component of sound 1
-	plt.subplot(2,1,1)
-	numFrames = int(stocEnv1[:,0].size)
-	sizeEnv = int(stocEnv1[0,:].size)
-	frmTime = H*np.arange(numFrames)/float(fs1)
-	binFreq = (.5*fs1)*np.arange(sizeEnv*maxplotfreq/(.5*fs1))/sizeEnv                      
-	plt.pcolormesh(frmTime, binFreq, np.transpose(stocEnv1[:,:int(sizeEnv*maxplotfreq/(.5*fs1))+1]))
-	plt.autoscale(tight=True)
-
-	# plot harmonic on top of stochastic spectrogram of sound 1
-	if (hfreq1.shape[1] > 0):
-		harms = np.copy(hfreq1)
-		harms = harms*np.less(harms,maxplotfreq)
-		harms[harms==0] = np.nan
-		numFrames = int(harms[:,0].size)
-		frmTime = H*np.arange(numFrames)/float(fs1) 
-		plt.plot(frmTime, harms, color='k', ms=3, alpha=1)
-		plt.xlabel('time (sec)')
-		plt.ylabel('frequency (Hz)')
-		plt.autoscale(tight=True)
-		plt.title('harmonics + stochastic spectrogram of sound 1')
-
-	# plot spectrogram stochastic component of sound 2
-	plt.subplot(2,1,2)
-	numFrames = int(stocEnv2[:,0].size)
-	sizeEnv = int(stocEnv2[0,:].size)
-	frmTime = H*np.arange(numFrames)/float(fs2)
-	binFreq = (.5*fs2)*np.arange(sizeEnv*maxplotfreq/(.5*fs2))/sizeEnv                      
-	plt.pcolormesh(frmTime, binFreq, np.transpose(stocEnv2[:,:int(sizeEnv*maxplotfreq/(.5*fs2))+1]))
-	plt.autoscale(tight=True)
-
-	# plot harmonic on top of stochastic spectrogram of sound 2
-	if (hfreq2.shape[1] > 0):
-		harms = np.copy(hfreq2)
-		harms = harms*np.less(harms,maxplotfreq)
-		harms[harms==0] = np.nan
-		numFrames = int(harms[:,0].size)
-		frmTime = H*np.arange(numFrames)/float(fs2) 
-		plt.plot(frmTime, harms, color='k', ms=3, alpha=1)
-		plt.xlabel('time (sec)')
-		plt.ylabel('frequency (Hz)')
-		plt.autoscale(tight=True)
-		plt.title('harmonics + stochastic spectrogram of sound 2')
-
-	plt.tight_layout()
-	plt.show(block=False)
-	
 	return inputFile1, fs1, hfreq1, hmag1, stocEnv1, inputFile2, hfreq2, hmag2, stocEnv2
 
 def transformation_synthesis(inputFile1, fs, hfreq1, hmag1, stocEnv1, inputFile2, hfreq2, hmag2, stocEnv2,
@@ -130,46 +76,6 @@ def transformation_synthesis(inputFile1, fs, hfreq1, hmag1, stocEnv1, inputFile2
 	# write output sound 
 	outputFile = 'output_sounds/' + os.path.basename(inputFile1)[:-4] + '_hpsMorph.wav'
 	UF.wavwrite(y, fs, outputFile)
-
-	# create figure to plot
-	plt.figure(figsize=(12, 9))
-
-	# frequency range to plot
-	maxplotfreq = 15000.0
-
-	# plot spectrogram of transformed stochastic compoment
-	plt.subplot(2,1,1)
-	numFrames = int(ystocEnv[:,0].size)
-	sizeEnv = int(ystocEnv[0,:].size)
-	frmTime = H*np.arange(numFrames)/float(fs)
-	binFreq = (.5*fs)*np.arange(sizeEnv*maxplotfreq/(.5*fs))/sizeEnv                      
-	plt.pcolormesh(frmTime, binFreq, np.transpose(ystocEnv[:,:int(sizeEnv*maxplotfreq/(.5*fs))+1]))
-	plt.autoscale(tight=True)
-
-	# plot transformed harmonic on top of stochastic spectrogram
-	if (yhfreq.shape[1] > 0):
-		harms = np.copy(yhfreq)
-		harms = harms*np.less(harms,maxplotfreq)
-		harms[harms==0] = np.nan
-		numFrames = int(harms[:,0].size)
-		frmTime = H*np.arange(numFrames)/float(fs) 
-		plt.plot(frmTime, harms, color='k', ms=3, alpha=1)
-		plt.xlabel('time (sec)')
-		plt.ylabel('frequency (Hz)')
-		plt.autoscale(tight=True)
-		plt.title('harmonics + stochastic spectrogram')
-
-	# plot the output sound
-	plt.subplot(2,1,2)
-	plt.plot(np.arange(y.size)/float(fs), y)
-	plt.axis([0, y.size/float(fs), min(y), max(y)])
-	plt.ylabel('amplitude')
-	plt.xlabel('time (sec)')
-	plt.title('output sound: y')
-
-	plt.tight_layout()
-	plt.show()
-	
 
 if __name__ == "__main__":
 	# analysis
